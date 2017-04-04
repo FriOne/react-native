@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { ListView } from 'react-native';
 
-import { Todo } from '../../../models/Todo';
-import { TodoItem } from './TodoItem';
+import { Todo } from '../../../../models/Todo';
+import { TodoItem } from '../TodoItem';
 
 interface Props {
   todos: Todo[];

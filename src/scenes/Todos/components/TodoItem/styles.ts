@@ -1,6 +1,6 @@
 import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
-import { COLOR_PRIMARY, COLOR_SECONDARY } from '../../../variables';
+import { COLOR_PRIMARY } from '../../../../styles/variables';
 
 const componentStyles = StyleSheet.create({
   container: {

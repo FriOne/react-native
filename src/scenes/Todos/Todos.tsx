@@ -1,74 +1,35 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
-import { connect, ProviderProps } from 'react-redux';
 import Tabs from 'react-native-tabs';
 
-import { TodoList } from './TodoList/index';
-import { AddNewTodo } from './AddNewTodo/index';
-import { TodoActions } from '../../actions/TodoActions';
-import { Todo } from '../../models/Todo';
 import { FilterType } from '../../models/FilterType';
+import { Todo } from '../../models/Todo';
+import { TodoList } from './components/TodoList';
+import { AddNewTodo } from './components/AddNewTodo';
 import componentStyles from './styles';
 
-interface Props extends ProviderProps {
+interface Props {
   todos: Todo[];
   activeFilter: FilterType;
   onAddNewTodo: (text: string) => void;
   onTodoChange: (uuid: string, update: any) => void;
   onTodoDelete: (uuid: string) => void;
   onFilterChange: (type: FilterType) => void;
-  onMarkAllAsDoneClick: () => void;
-  onClearDoneClick: () => void;
+  onMarkAllAsDone: () => void;
+  onClearDone: () => void;
 }
 
 interface State {}
 
-let mapStateToProps = (state) => ({
-  todos: getFilteredTodos(state.todoState.todos, state.todoState.activeFilter),
-  activeFilter: state.todoState.activeFilter,
-});
-
-let getFilteredTodos = (todos: Todo[], type: FilterType) => {
-  if (FilterType.active === type) {
-    return todos.filter(todo => !todo.completed);
-  }
-  if (FilterType.done === type) {
-    return todos.filter(todo => todo.completed);
-  }
-  return [...todos];
-};
-
-let mapDispatchToProps = (dispatch) => ({
-  onAddNewTodo: (text: string) => {
-    let newTodo = new Todo();
-    newTodo.text = text;
-    dispatch(TodoActions.addTodo(newTodo));
-  },
-  onTodoChange: (uuid: string, update: any) => {
-    dispatch(TodoActions.updateTodo(uuid, update));
-  },
-  onTodoDelete: (uuid: string) => {
-    dispatch(TodoActions.deleteTodo(uuid));
-  },
-  onFilterChange: (type: FilterType) => {
-    dispatch(TodoActions.changeFilter(type));
-  },
-  onClearDoneClick: () => {
-    dispatch(TodoActions.clearDone());
-  },
-  onMarkAllAsDoneClick: () => {
-    dispatch(TodoActions.markAllAsRead());
-  },
-});
-
 let TextNoType = Text as any;
-let noTodosMessages = {
-  [FilterType.all]: 'You don\'t have any todos',
-  [FilterType.done]: 'You haven\'t done any tasks',
-  [FilterType.active]: 'You don\'t have any active todos',
-};
 
-class TodoContainer extends Component<Props, State> {
+export class Todos extends Component<Props, State> {
+
+  static noTodosMessages = {
+    [FilterType.all]: 'You don\'t have any todos',
+    [FilterType.done]: 'You haven\'t done any tasks',
+    [FilterType.active]: 'You don\'t have any active todos',
+  };
 
   getActiveButtons() {
     let {todos, activeFilter} = this.props;
@@ -84,7 +45,7 @@ class TodoContainer extends Component<Props, State> {
       buttons.push(
         <TouchableHighlight
           underlayColor='#99d9f4'
-          onPress={this.props.onMarkAllAsDoneClick}
+          onPress={this.props.onMarkAllAsDone}
         >
           <Text>Mark all as Done</Text>
         </TouchableHighlight>
@@ -98,7 +59,7 @@ class TodoContainer extends Component<Props, State> {
       buttons.push(
         <TouchableHighlight
           underlayColor='#99d9f4'
-          onPress={this.props.onClearDoneClick}
+          onPress={this.props.onClearDone}
         >
           <Text>Clear Done</Text>
         </TouchableHighlight>
@@ -113,7 +74,7 @@ class TodoContainer extends Component<Props, State> {
       <View style={componentStyles.container}>
         <AddNewTodo onAdd={onAddNewTodo}/>
 
-        {(todos.length === 0) && <Text>{noTodosMessages[activeFilter]}</Text>}
+        {(todos.length === 0) && <Text>{Todos.noTodosMessages[activeFilter]}</Text>}
         {this.getActiveButtons()}
 
         <TodoList
@@ -135,6 +96,3 @@ class TodoContainer extends Component<Props, State> {
     );
   }
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(TodoContainer);
-

@@ -23,6 +23,11 @@ const componentStyles = StyleSheet.create({
     width: 50,
     backgroundColor: COLOR_PRIMARY,
   } as ViewStyle,
+  deleteButton: {
+    flex: 0,
+    width: 50,
+    backgroundColor: COLOR_PRIMARY,
+  } as ViewStyle,
 });
 
 export default componentStyles;

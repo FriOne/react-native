@@ -7,6 +7,7 @@ import { TodoItem } from './TodoItem';
 interface Props {
   todos: Todo[];
   onTodoChange: (uuid: string, update: any) => void;
+  onTodoDelete: (uuid: string) => void;
 }
 
 interface State {}
@@ -21,10 +22,12 @@ export class TodoList extends Component<Props, State> {
     return (
       <ListView
         dataSource={dataSource}
+        keyboardShouldPersistTaps="handled"
         enableEmptySections={true}
         renderRow={(todo) => <TodoItem
           todo={todo}
           onChange={this.props.onTodoChange}
+          onDelete={this.props.onTodoDelete}
         />}
       />
     );

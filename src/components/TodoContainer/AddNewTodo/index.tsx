@@ -19,6 +19,9 @@ export class AddNewTodo extends Component<Props, State> {
 
   @autobind
   onAdd() {
+    if (this.state.text.trim() === '') {
+      return;
+    }
     this.props.onAdd(this.state.text);
     this.setState({text: ''});
   }

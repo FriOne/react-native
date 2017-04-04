@@ -19,11 +19,33 @@ export class TodoActions {
     };
   }
 
+  static DELETE_TODO = 'DELETE_TODO';
+  static deleteTodo(uuid: string) {
+    return {
+      type: TodoActions.DELETE_TODO,
+      uuid: uuid,
+    };
+  }
+
   static CHANGE_FILTER = 'CHANGE_FILTER';
   static changeFilter(type: FilterType) {
     return {
       type: TodoActions.CHANGE_FILTER,
       filterType: type,
+    };
+  }
+
+  static CLEAR_DONE = 'CLEAR_DONE';
+  static clearDone() {
+    return {
+      type: TodoActions.CLEAR_DONE,
+    };
+  }
+
+  static MARK_ALL_AS_READ = 'MARK_ALL_AS_READ';
+  static markAllAsRead() {
+    return {
+      type: TodoActions.MARK_ALL_AS_READ,
     };
   }
 }

@@ -1,28 +1,33 @@
 import autobind from 'autobind-decorator';
 import React, { Component } from 'react';
-import { View, Text, TouchableHighlight, ViewStyle } from 'react-native';
+import { View, Text, TouchableHighlight, TextInput } from 'react-native';
 
 import { Todo } from '../../../../models/Todo';
-import { TodoEdit } from './TodoEdit';
 import componentStyles from './styles';
 
 interface Props {
   todo: Todo;
   onChange: (uuid: string, update: any) => void;
+  onDelete: (uuid: string) => void;
 }
 
 interface State {
   editing: boolean;
+  text: string;
 }
 
 export class TodoItem extends Component<Props, State> {
-  state = {
-    editing: false,
-  };
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      editing: false,
+      text: props.todo.text,
+    };
+  }
 
   @autobind
-  onSave(text: string) {
-    this.props.onChange(this.props.todo.uuid, {text});
+  onSave() {
+    this.props.onChange(this.props.todo.uuid, {text: this.state.text});
     this.setState({editing: false});
   }
 
@@ -30,6 +35,11 @@ export class TodoItem extends Component<Props, State> {
   onCompleteToggle() {
     this.props.onChange(this.props.todo.uuid, {completed: !this.props.todo.completed});
     this.setState({editing: false});
+  }
+
+  @autobind
+  onDelete() {
+    this.props.onDelete(this.props.todo.uuid);
   }
 
   @autobind
@@ -46,31 +56,26 @@ export class TodoItem extends Component<Props, State> {
     let todo = this.props.todo;
     let backgroundColor = this.props.todo.completed ? '#c3ffb6' : '#fff';
     if (this.state.editing) {
-      return <TodoEdit
-        text={todo.text}
-        onSave={this.onSave}
-        onCancel={this.onCancel}
+      return <TextInput
+        value={this.state.text}
+        autoFocus={true}
+        underlineColorAndroid="transparent"
+        onBlur={this.onSave}
+        onSubmitEditing={this.onSave}
+        onChangeText={(text) => this.setState({text})}
       />;
     }
     return (
       <View style={[componentStyles.container, {backgroundColor: backgroundColor}]}>
-        <Text
-          style={componentStyles.text}
-          onPress={this.onEdit}
-        >
-          {todo.text}
-        </Text>
-        <TouchableHighlight
-          style={componentStyles.editButton}
-          onPress={this.onEdit}
-        >
+        <Text style={componentStyles.text} onPress={this.onEdit}>{todo.text}</Text>
+        <TouchableHighlight style={componentStyles.editButton} onPress={this.onEdit}>
           <Text>Edit</Text>
         </TouchableHighlight>
-        <TouchableHighlight
-          style={componentStyles.completeButton}
-          onPress={this.onCompleteToggle}
-        >
+        <TouchableHighlight style={componentStyles.completeButton} onPress={this.onCompleteToggle}>
           <Text>Complete</Text>
+        </TouchableHighlight>
+        <TouchableHighlight style={componentStyles.deleteButton} onPress={this.onDelete}>
+          <Text>Delete</Text>
         </TouchableHighlight>
       </View>
     );

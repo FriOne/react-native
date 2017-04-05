@@ -17,12 +17,14 @@ interface State {
 }
 
 export class TodoItem extends Component<Props, State> {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      editing: false,
-      text: props.todo.text,
-    };
+
+  state = {
+    editing: false,
+    text: '',
+  };
+
+  componentWillReceiveProps(nextProps) {
+    this.state.text = nextProps.todo.text;
   }
 
   @autobind

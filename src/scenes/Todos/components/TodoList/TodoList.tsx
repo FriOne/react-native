@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { ListView } from 'react-native';
+import { View, ListView } from 'react-native';
 
 import { Todo } from '../../../../models/Todo';
 import { TodoItem } from '../TodoItem';
+import componentStyles from './styles';
 
 interface Props {
   todos: Todo[];
@@ -24,7 +25,12 @@ export class TodoList extends Component<Props, State> {
         dataSource={dataSource}
         keyboardShouldPersistTaps="handled"
         enableEmptySections={true}
-        renderRow={(todo) => <TodoItem
+        renderSeparator={(sectionId, rowId) => <View
+          key={rowId}
+          style={componentStyles.separator}
+        />}
+        renderRow={(todo, sectionID, rowId) => <TodoItem
+          key={rowId}
           todo={todo}
           onChange={this.props.onTodoChange}
           onDelete={this.props.onTodoDelete}

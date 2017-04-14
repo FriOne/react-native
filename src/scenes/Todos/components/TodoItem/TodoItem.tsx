@@ -1,42 +1,58 @@
 import autobind from 'autobind-decorator';
 import React, { Component } from 'react';
 import { View, Text, TouchableHighlight, TextInput } from 'react-native';
+import CheckBox from 'react-native-icon-checkbox';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { Todo } from '../../../../models/Todo';
 import componentStyles from './styles';
 
 interface Props {
+  key: any;
   todo: Todo;
   onChange: (uuid: string, update: any) => void;
   onDelete: (uuid: string) => void;
 }
 
 interface State {
-  editing: boolean;
   text: string;
 }
 
 export class TodoItem extends Component<Props, State> {
 
   state = {
-    editing: false,
     text: '',
   };
 
+  componentDidMount() {
+    this.setState({text: this.props.todo.text});
+  }
+
   componentWillReceiveProps(nextProps) {
-    this.state.text = nextProps.todo.text;
+    this.setState({text: nextProps.todo.text});
   }
 
   @autobind
   onSave() {
+    if (this.state.text.trim() === '') {
+      return;
+    }
     this.props.onChange(this.props.todo.uuid, {text: this.state.text});
-    this.setState({editing: false});
+  }
+
+  @autobind
+  onBlur() {
+    if (this.state.text.trim() !== '') {
+      this.onSave();
+    }
+    else {
+      this.state.text = this.props.todo.text;
+    }
   }
 
   @autobind
   onCompleteToggle() {
     this.props.onChange(this.props.todo.uuid, {completed: !this.props.todo.completed});
-    this.setState({editing: false});
   }
 
   @autobind
@@ -44,40 +60,37 @@ export class TodoItem extends Component<Props, State> {
     this.props.onDelete(this.props.todo.uuid);
   }
 
-  @autobind
-  onEdit() {
-    this.setState({editing: true});
-  }
-
-  @autobind
-  onCancel() {
-    this.setState({editing: false});
-  }
-
   render() {
     let todo = this.props.todo;
-    let backgroundColor = this.props.todo.completed ? '#c3ffb6' : '#fff';
-    if (this.state.editing) {
-      return <TextInput
+    let inner;
+    if (todo.completed) {
+      inner = <Text style={[componentStyles.text, componentStyles.textCompleted]}>{todo.text}</Text>;
+    }
+    else {
+      inner = <TextInput
+        style={componentStyles.input}
         value={this.state.text}
-        autoFocus={true}
         underlineColorAndroid="transparent"
-        onBlur={this.onSave}
+        onBlur={this.onBlur}
         onSubmitEditing={this.onSave}
         onChangeText={(text) => this.setState({text})}
       />;
     }
     return (
-      <View style={[componentStyles.container, {backgroundColor: backgroundColor}]}>
-        <Text style={componentStyles.text} onPress={this.onEdit}>{todo.text}</Text>
-        <TouchableHighlight style={componentStyles.editButton} onPress={this.onEdit}>
-          <Text>Edit</Text>
-        </TouchableHighlight>
-        <TouchableHighlight style={componentStyles.completeButton} onPress={this.onCompleteToggle}>
-          <Text>Complete</Text>
-        </TouchableHighlight>
+      <View style={componentStyles.container}>
+        <CheckBox
+          backgroundColor="#fff"
+          borderRadius={0}
+          iconStyle={componentStyles.checkboxIconStyle}
+          checkedIconStyle={componentStyles.checkboxCheckedIconStyle}
+          size={30}
+          color="#68686e"
+          onPress={this.onCompleteToggle}
+          checked={this.props.todo.completed}
+        />
+        {inner}
         <TouchableHighlight style={componentStyles.deleteButton} onPress={this.onDelete}>
-          <Text>Delete</Text>
+          <Icon style={componentStyles.trashIcon} name={'trash'} size={30} color="#fff" />
         </TouchableHighlight>
       </View>
     );

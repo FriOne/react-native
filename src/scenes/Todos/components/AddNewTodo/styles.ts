@@ -5,24 +5,27 @@ import { COLOR_PRIMARY, COLOR_SECONDARY } from '../../../../styles/variables';
 const componentStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#8E8E8E',
   } as ViewStyle,
   inputContainer: {
     flex: 1,
-    borderColor: COLOR_SECONDARY,
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
-    borderWidth: 1,
   } as ViewStyle,
   input: {
+    height: 60,
     padding: 10,
-    height: 40,
+    fontSize: 16,
   } as TextStyle,
   button: {
     flex: 0,
-    width: 50,
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-    backgroundColor: COLOR_PRIMARY,
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  } as ViewStyle,
+  plusIcon: {
+    flex: 1,
+    marginTop: 16,
   } as ViewStyle,
 });
 

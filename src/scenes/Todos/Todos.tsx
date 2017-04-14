@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableHighlight } from 'react-native';
+import { View, Text } from 'react-native';
 import Tabs from 'react-native-tabs';
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { FilterType } from '../../models/FilterType';
 import { Todo } from '../../models/Todo';
@@ -19,22 +21,21 @@ interface Props {
   onClearDone: () => void;
 }
 
-interface State {}
+interface State {
+  fabIsActive: boolean;
+}
 
 let TextNoType = Text as any;
 
 export class Todos extends Component<Props, State> {
-
-  static noTodosMessages = {
-    [FilterType.all]: 'You don\'t have any todos',
-    [FilterType.done]: 'You haven\'t done any tasks',
-    [FilterType.active]: 'You don\'t have any active todos',
+  state = {
+    fabIsActive: false,
   };
 
   getActiveButtons() {
     let {todos, activeFilter} = this.props;
 
-    if (this.props.todos.length === 0) {
+    if (todos.length === 0) {
       return [];
     }
     let buttons = [];
@@ -43,39 +44,45 @@ export class Todos extends Component<Props, State> {
       && todos.filter(todo => !todo.completed).length
     ) {
       buttons.push(
-        <TouchableHighlight
-          underlayColor='#99d9f4'
+        <ActionButton.Item
+          key="1"
+          buttonColor='#9b59b6'
+          title="Mark all as Done"
           onPress={this.props.onMarkAllAsDone}
         >
-          <Text>Mark all as Done</Text>
-        </TouchableHighlight>
+          <Icon name={'check'} color="#fff" size={20}/>
+        </ActionButton.Item>
       );
     }
-
     if (
       [FilterType.done, FilterType.all].indexOf(activeFilter) !== -1
       && todos.filter(todo => todo.completed).length
     ) {
       buttons.push(
-        <TouchableHighlight
-          underlayColor='#99d9f4'
+        <ActionButton.Item
+          key="2"
+          buttonColor='#9b59b6'
+          title="Clear Done"
           onPress={this.props.onClearDone}
         >
-          <Text>Clear Done</Text>
-        </TouchableHighlight>
+          <Icon name={'eraser'} color="#fff" size={20}/>
+        </ActionButton.Item>
       );
     }
-    return buttons;
+    return <ActionButton
+      buttonColor="rgba(231,76,60,1)"
+      autoInactive={true}
+    >
+      {buttons}
+    </ActionButton>;
   }
 
   render() {
     let {todos, activeFilter, onAddNewTodo, onTodoChange, onTodoDelete, onFilterChange} = this.props;
+    let hasTodos = (todos.length !== 0);
     return (
       <View style={componentStyles.container}>
-        <AddNewTodo onAdd={onAddNewTodo}/>
-
-        {(todos.length === 0) && <Text>{Todos.noTodosMessages[activeFilter]}</Text>}
-        {this.getActiveButtons()}
+        <AddNewTodo onAdd={onAddNewTodo} autoFocus={hasTodos}/>
 
         <TodoList
           todos={todos}
@@ -84,14 +91,15 @@ export class Todos extends Component<Props, State> {
         />
         <Tabs
           selected={activeFilter}
-          style={{backgroundColor:'white'}}
-          selectedStyle={{color:'red'}}
+          style={componentStyles.tabs}
+          selectedStyle={componentStyles.activeTab}
           onSelect={(el) => onFilterChange(el.props.name)}
         >
-          <TextNoType name={FilterType.all}>All</TextNoType>
-          <TextNoType name={FilterType.active}>Active</TextNoType>
-          <TextNoType name={FilterType.done}>Done</TextNoType>
+          <TextNoType name={FilterType.all} style={componentStyles.tab}>ALL</TextNoType>
+          <TextNoType name={FilterType.active} style={componentStyles.tab}>ACTIVE</TextNoType>
+          <TextNoType name={FilterType.done} style={componentStyles.tab}>DONE</TextNoType>
         </Tabs>
+        {this.getActiveButtons()}
       </View>
     );
   }

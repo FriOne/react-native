@@ -1,10 +1,12 @@
 import autobind from 'autobind-decorator';
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableHighlight } from 'react-native';
+import { View, TextInput, TouchableHighlight } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import componentStyles from './styles';
 
 interface Props {
+  autoFocus: boolean;
   onAdd: (text: string) => void;
 }
 
@@ -13,6 +15,7 @@ interface State {
 }
 
 export class AddNewTodo extends Component<Props, State> {
+
   state = {
     text: '',
   };
@@ -20,6 +23,7 @@ export class AddNewTodo extends Component<Props, State> {
   @autobind
   onAdd() {
     if (this.state.text.trim() === '') {
+      (this.refs.input as any).focus();
       return;
     }
     this.props.onAdd(this.state.text);
@@ -34,26 +38,27 @@ export class AddNewTodo extends Component<Props, State> {
   render() {
     return (
       <View style={componentStyles.container}>
-        <View style={componentStyles.inputContainer}>
-          <TextInput
-            value={this.state.text}
-            style={componentStyles.input}
-            underlineColorAndroid="transparent"
-            autoFocus={true}
-            onBlur={this.onBlur}
-            onChangeText={(text) => this.setState({text})}
-            onSubmitEditing={this.onAdd}
-            placeholder="Add new Todo here ->"
-          />
-        </View>
         <TouchableHighlight
           style={componentStyles.button}
           underlayColor='#99d9f4'
           disabled={!this.state.text.trim()}
           onPress={this.onAdd}
         >
-          <Text>+</Text>
+          <Icon style={componentStyles.plusIcon} name={'plus-square'} size={26}/>
         </TouchableHighlight>
+        <View style={componentStyles.inputContainer}>
+          <TextInput
+            value={this.state.text}
+            style={componentStyles.input}
+            underlineColorAndroid="transparent"
+            autoFocus={this.props.autoFocus}
+            onBlur={this.onBlur}
+            onChangeText={(text) => this.setState({text})}
+            onSubmitEditing={this.onAdd}
+            placeholder="New todo"
+            ref="input"
+          />
+        </View>
       </View>
     );
   }

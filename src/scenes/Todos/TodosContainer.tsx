@@ -28,7 +28,7 @@ export class TodosContainer extends Component<any, any> {
 function mapStateToProps(state) {
   return {
     todos: getFilteredTodos(state.todoState.todos, state.todoState.activeFilter),
-    activeFilter: state.todoState.activeFilter,
+    activeFilter: state.todoState.activeFilter || FilterType.all,
   };
 }
 

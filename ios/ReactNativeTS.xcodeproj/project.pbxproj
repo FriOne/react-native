@@ -1092,6 +1092,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.azoft.ReactNativeTodo;
 				PRODUCT_NAME = ReactNativeTS;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1109,6 +1110,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.azoft.ReactNativeTodo;
 				PRODUCT_NAME = ReactNativeTS;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

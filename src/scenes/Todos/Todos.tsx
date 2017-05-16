@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { Platform, View, Text } from 'react-native';
 import Tabs from 'react-native-tabs';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import StatusBarSizeIOS from 'react-native-status-bar-size';
 
 import { FilterType } from '../../models/FilterType';
 import { Todo } from '../../models/Todo';
@@ -23,14 +24,23 @@ interface Props {
 
 interface State {
   fabIsActive: boolean;
+  statusBarHeight: number;
 }
 
 let TextNoType = Text as any;
 
 export class Todos extends Component<Props, State> {
+
   state = {
     fabIsActive: false,
+    statusBarHeight: 0,
   };
+
+  componentWillMount() {
+    if (Platform.OS === 'ios') {
+      this.setState({statusBarHeight: StatusBarSizeIOS.currentHeight});
+    }
+  }
 
   getActiveButtons() {
     let {todos, activeFilter} = this.props;
@@ -78,6 +88,7 @@ export class Todos extends Component<Props, State> {
   }
 
   render() {
+    let additionalPadding = 40;
     let {todos, activeFilter, onAddNewTodo, onTodoChange, onTodoDelete, onFilterChange} = this.props;
     let hasTodos = (todos.length !== 0);
     return (
@@ -91,7 +102,7 @@ export class Todos extends Component<Props, State> {
         />
         <Tabs
           selected={activeFilter}
-          style={componentStyles.tabs}
+          style={{...componentStyles.tabs, height: componentStyles.tabs.height + additionalPadding}}
           selectedStyle={componentStyles.activeTab}
           onSelect={(el) => onFilterChange(el.props.name)}
         >

@@ -12,16 +12,18 @@ export class TodosContainer extends Component<any, any> {
     let {todos, activeFilter} = this.props;
     let {onAddNewTodo, onTodoChange, onTodoDelete, onFilterChange, onMarkAllAsDone, onClearDone} = this.props;
 
-    return <Todos
-      todos={todos}
-      activeFilter={activeFilter}
-      onAddNewTodo={onAddNewTodo}
-      onTodoChange={onTodoChange}
-      onTodoDelete={onTodoDelete}
-      onFilterChange={onFilterChange}
-      onMarkAllAsDone={onMarkAllAsDone}
-      onClearDone={onClearDone}
-    />;
+    return (
+      <Todos
+        todos={todos}
+        activeFilter={activeFilter}
+        onAddNewTodo={onAddNewTodo}
+        onTodoChange={onTodoChange}
+        onTodoDelete={onTodoDelete}
+        onFilterChange={onFilterChange}
+        onMarkAllAsDone={onMarkAllAsDone}
+        onClearDone={onClearDone}
+      />
+    );
   }
 }
 

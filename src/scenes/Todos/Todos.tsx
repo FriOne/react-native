@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Platform, View, Text, ViewStyle } from 'react-native';
+import { Platform, View, Text, StyleSheet, NativeModules } from 'react-native';
 import Tabs from 'react-native-tabs';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import StatusBarSizeIOS from 'react-native-status-bar-size';
 
 import { FilterType } from '../../models/FilterType';
 import { Todo } from '../../models/Todo';
@@ -38,7 +37,10 @@ export class Todos extends Component<Props, State> {
 
   componentWillMount() {
     if (Platform.OS === 'ios') {
-      this.setState({statusBarHeight: StatusBarSizeIOS.currentHeight});
+      const {StatusBarManager} = NativeModules;
+      StatusBarManager.getHeight(statusBar => {
+        this.setState({statusBarHeight: statusBar.height});
+      });
     }
   }
 
@@ -91,10 +93,13 @@ export class Todos extends Component<Props, State> {
     let {todos, activeFilter, onAddNewTodo, onTodoChange, onTodoDelete, onFilterChange} = this.props;
     let hasTodos = (todos.length !== 0);
 
-    componentStyles.tabs.height = componentStyles.tabs.height as number + this.state.statusBarHeight;
+    const {statusBarHeight} = this.state;
+    const tabsStyle = StyleSheet.flatten([componentStyles.tabs, {height: 50 + statusBarHeight}]);
+    const tabStyle = StyleSheet.flatten([componentStyles.tab, {lineHeight: 36 + statusBarHeight}]);
+    const containerStyle = StyleSheet.flatten([componentStyles.container, {paddingTop: 50 + statusBarHeight}]);
 
     return (
-      <View style={componentStyles.container}>
+      <View style={containerStyle}>
         <AddNewTodo onAdd={onAddNewTodo} autoFocus={hasTodos}/>
 
         <TodoList
@@ -104,13 +109,13 @@ export class Todos extends Component<Props, State> {
         />
         <Tabs
           selected={activeFilter}
-          style={componentStyles.tabs}
+          style={tabsStyle}
           selectedStyle={componentStyles.activeTab}
           onSelect={(el) => onFilterChange(el.props.name)}
         >
-          <TextNoType name={FilterType.all} style={componentStyles.tab}>ALL</TextNoType>
-          <TextNoType name={FilterType.active} style={componentStyles.tab}>ACTIVE</TextNoType>
-          <TextNoType name={FilterType.done} style={componentStyles.tab}>DONE</TextNoType>
+          <TextNoType name={FilterType.all} style={tabStyle}>ALL</TextNoType>
+          <TextNoType name={FilterType.active} style={tabStyle}>ACTIVE</TextNoType>
+          <TextNoType name={FilterType.done} style={tabStyle}>DONE</TextNoType>
         </Tabs>
         {this.getActiveButtons()}
       </View>

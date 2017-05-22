@@ -16,7 +16,6 @@
     "react-native-action-button": "^2.6.7",
     "react-native-button": "1.8.2",
     "react-native-icon-checkbox": "^1.2.0",
-    "react-native-status-bar-size": "^0.3.2",
     "react-native-tabs": "^1.0.9",
     "react-native-vector-icons": "^4.0.1",
     "react-redux": "5.0.3",

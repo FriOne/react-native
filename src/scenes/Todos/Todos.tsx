@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, Text } from 'react-native';
+import { Platform, View, Text, ViewStyle } from 'react-native';
 import Tabs from 'react-native-tabs';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -88,9 +88,12 @@ export class Todos extends Component<Props, State> {
   }
 
   render() {
-    let additionalPadding = 40;
     let {todos, activeFilter, onAddNewTodo, onTodoChange, onTodoDelete, onFilterChange} = this.props;
     let hasTodos = (todos.length !== 0);
+
+    let tabsHeight = componentStyles.tabs.height as number + this.state.statusBarHeight;
+    let tabStyle = {...componentStyles.tabs, height: tabsHeight} as ViewStyle;
+
     return (
       <View style={componentStyles.container}>
         <AddNewTodo onAdd={onAddNewTodo} autoFocus={hasTodos}/>
@@ -102,7 +105,7 @@ export class Todos extends Component<Props, State> {
         />
         <Tabs
           selected={activeFilter}
-          style={{...componentStyles.tabs, height: componentStyles.tabs.height + additionalPadding}}
+          style={tabStyle}
           selectedStyle={componentStyles.activeTab}
           onSelect={(el) => onFilterChange(el.props.name)}
         >

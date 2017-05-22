@@ -91,8 +91,7 @@ export class Todos extends Component<Props, State> {
     let {todos, activeFilter, onAddNewTodo, onTodoChange, onTodoDelete, onFilterChange} = this.props;
     let hasTodos = (todos.length !== 0);
 
-    let tabsHeight = componentStyles.tabs.height as number + this.state.statusBarHeight;
-    let tabStyle = {...componentStyles.tabs, height: tabsHeight} as ViewStyle;
+    componentStyles.tabs.height = componentStyles.tabs.height as number + this.state.statusBarHeight;
 
     return (
       <View style={componentStyles.container}>
@@ -105,7 +104,7 @@ export class Todos extends Component<Props, State> {
         />
         <Tabs
           selected={activeFilter}
-          style={tabStyle}
+          style={componentStyles.tabs}
           selectedStyle={componentStyles.activeTab}
           onSelect={(el) => onFilterChange(el.props.name)}
         >

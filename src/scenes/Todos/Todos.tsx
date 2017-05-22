@@ -36,11 +36,14 @@ export class Todos extends Component<Props, State> {
   };
 
   componentWillMount() {
+    const {StatusBarManager} = NativeModules;
     if (Platform.OS === 'ios') {
-      const {StatusBarManager} = NativeModules;
       StatusBarManager.getHeight(statusBar => {
         this.setState({statusBarHeight: statusBar.height});
       });
+    }
+    else {
+      this.setState({statusBarHeight: StatusBarManager.HEIGHT});
     }
   }
 
@@ -96,6 +99,7 @@ export class Todos extends Component<Props, State> {
     const {statusBarHeight} = this.state;
     const tabsStyle = StyleSheet.flatten([componentStyles.tabs, {height: 50 + statusBarHeight}]);
     const tabStyle = StyleSheet.flatten([componentStyles.tab, {lineHeight: 36 + statusBarHeight}]);
+    const iconStyle = StyleSheet.flatten([componentStyles.iconStyle, {height: 50 + statusBarHeight}]);
     const containerStyle = StyleSheet.flatten([componentStyles.container, {paddingTop: 50 + statusBarHeight}]);
 
     return (
@@ -111,6 +115,7 @@ export class Todos extends Component<Props, State> {
           selected={activeFilter}
           style={tabsStyle}
           selectedStyle={componentStyles.activeTab}
+          iconStyle={iconStyle}
           onSelect={(el) => onFilterChange(el.props.name)}
         >
           <TextNoType name={FilterType.all} style={tabStyle}>ALL</TextNoType>

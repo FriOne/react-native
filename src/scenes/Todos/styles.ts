@@ -31,6 +31,9 @@ const componentStyles = StyleSheet.create({
     lineHeight: 36,
     color: '#fff',
   } as TextStyle,
+  iconStyle: {
+    height: 50,
+  } as TextStyle,
   activeTab: {
     borderBottomWidth: 4,
     borderBottomColor: COLOR_SECONDARY,

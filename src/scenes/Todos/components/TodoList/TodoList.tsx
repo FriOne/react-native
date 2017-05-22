@@ -23,6 +23,7 @@ export class TodoList extends Component<Props, State> {
     return (
       <ListView
         dataSource={dataSource}
+        bounces={false}
         keyboardShouldPersistTaps="handled"
         enableEmptySections={true}
         renderSeparator={(sectionId, rowId) => <View
